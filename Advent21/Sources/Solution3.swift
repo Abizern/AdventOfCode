@@ -11,6 +11,4 @@ public enum Solution3: Solution {
     public static func part2(_ input: String) -> String {
         "Not Solved Yet"
     }
-
-
 }

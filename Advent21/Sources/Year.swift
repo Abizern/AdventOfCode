@@ -6,6 +6,7 @@ public enum Year2021: Year {
     public static let title = "Year 2021\n~~~~~~~~~"
 
     public static let solutions: [Solution.Type] = [
-        Solution1.self
+        Solution1.self,
+        Solution2.self
     ]
 }
