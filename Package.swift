@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "AdventOfCode",
+    platforms: [.macOS(.v12)],
     products: [
         .executable(name: "aoc", targets: ["AdventOfCodeCLI"])
     ],
@@ -16,7 +17,9 @@ let package = Package(
             name: "AdventOfCodeCLI",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                "AdventUtilities"
+                "AdventUtilities",
+                "Inputs",
+                "Advent21"
             ],
             path: "AdventOfCodeCLI/Sources"),
         .target(
@@ -30,6 +33,25 @@ let package = Package(
             name: "AdventUtilitiesTests",
             dependencies: ["AdventUtilities"],
             path: "AdventUtilities/Tests",
-            resources: [.copy("Resources")])
+            resources: [.copy("Resources")]),
+        .target(
+            name: "Inputs",
+            path: "Inputs/Sources",
+            resources: [.copy("Resources")]),
+        .testTarget(
+            name: "InputsTests",
+            dependencies: ["Inputs"],
+            path: "Inputs/Tests"),
+        .target(
+            name: "Advent21",
+            dependencies: [
+                .product(name: "Algorithms", package: "swift-algorithms"),
+                "AdventUtilities"
+            ],
+            path: "Advent21/Sources"),
+        .testTarget(
+            name: "Advent21Tests",
+            dependencies: ["Advent21"],
+            path: "Advent21/Tests")
     ]
 )
