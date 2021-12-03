@@ -22,6 +22,7 @@ enum SolutionRunner {
     }
 
     private static func runAllSolution(_ year: CLI.Year) -> String {
+        year.year.title + "\n" + 
         zip((1...), year.year.solutions)
             .compactMap { (dayIndex, solution) -> String? in
                 guard
