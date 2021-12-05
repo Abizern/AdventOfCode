@@ -25,9 +25,21 @@ public enum Solution5: Solution {
 }
 
 extension Solution5 {
-    struct Point: Equatable, Hashable {
+    struct Point: Equatable, Hashable, Comparable {
+        static func < (lhs: Solution5.Point, rhs: Solution5.Point) -> Bool {
+            if lhs.x == rhs.x {
+                return lhs.y < rhs.y
+            } else {
+                return lhs.x < rhs.x
+            }
+        }
+
         let x: Int
         let y: Int
+
+        func incrementing(dx: Int, dy: Int) -> Point {
+            Point(x: x + dx, y: y + dy)
+        }
     }
 
     struct Segment: Equatable {
@@ -41,10 +53,10 @@ extension Solution5 {
         let end: Point
         let orientation: Orientation
 
-        init(start: Point, end: Point) {
-            self.start = start
-            self.end = end
-            switch (start, end) {
+        init(pt1: Point, pt2: Point) {
+            self.start = min(pt1, pt2)
+            self.end = max(pt1,pt2)
+            switch (pt1, pt2) {
             case let(a, b) where a.x == b.x:
                 self.orientation = .vertical
             case let(a, b) where a.y == b.y:
@@ -66,13 +78,13 @@ extension Solution5 {
         }
 
         var horizontalPoints: [Point] {
-            guard start.x != end.x else { return [start] }
-            return (min(start.x, end.x) ... max(start.x, end.x)).map { Point(x: $0, y: start.y) }
+            guard start != end else { return [start] }
+            return (0 ... abs(start.x - end.x)).map { start.incrementing(dx: $0, dy: 0) }
         }
 
         var verticalPoints: [Point] {
-            guard start.y != end.y else { return [start] }
-            return (min(start.y, end.y) ... max(start.y, end.y)).map { Point(x: start.x, y: $0) }
+            guard start != end else { return [start] }
+            return (0 ... abs(start.y - end.y)).map {start.incrementing(dx: 0, dy: $0) }
         }
 
         var diagonalPoints: [Point] {
@@ -80,21 +92,13 @@ extension Solution5 {
             let range = stride(from: 0, through: diff, by: 1)
             switch (start.x, end.x, start.y, end.y) {
             case let (a, b, c, d) where a < b && c < d:
-                return range.map { n in
-                    Point(x: start.x + n, y: start.y + n)
-                }
+                return range.map { start.incrementing(dx: $0, dy: $0) }
             case let (a, b, c, d) where a < b && c > d:
-                return range.map { n in
-                    Point(x: start.x + n, y: start.y - n)
-                }
+                return range.map { start.incrementing(dx: $0, dy: -$0) }
             case let (a, b, c, d) where a > b && c < d:
-                return range.map { n in
-                    Point(x: start.x - n, y: start.y + n)
-                }
+                return range.map { start.incrementing(dx: -$0, dy: $0) }
             case let (a, b, c, d) where a > b && c > d:
-                return range.map { n in
-                    Point(x: start.x - n, y: start.y - n)
-                }
+                return range.map { start.incrementing(dx: -$0, dy: -$0) }
             default:
                 return []
             }
@@ -112,7 +116,7 @@ extension Solution5 {
             .skip(StartsWith(","))
             .take(Int.parser())
             .map { a, b, c, d in
-                Solution5.Segment(start: Solution5.Point(x: a, y: b), end: Solution5.Point(x: c, y: d))
+                Solution5.Segment(pt1: Solution5.Point(x: a, y: b), pt2: Solution5.Point(x: c, y: d))
             }
             .eraseToAnyParser()
     }
