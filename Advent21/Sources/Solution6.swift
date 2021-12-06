@@ -25,22 +25,19 @@ extension Solution6 {
                    uniquingKeysWith: +)
     }
     static func countPopulation(of input: [Int: Int], over: Int) -> Int {
-        var memo = input
-
-        (0..<over).forEach { _ in
-            var temp = [Int: Int]()
-            memo.forEach { (key, value) in
+        (0 ..< over).reduce(into: input) { start, _ in
+            var end = [Int: Int]()
+            start.forEach { key, value in
                 if key == 0 {
-                    temp[6, default: 0] += value
-                    temp[8, default: 0] += value
+                    end[6, default: 0] += value
+                    end[8] = value
                 } else {
-                    temp[key - 1, default: 0] += value
+                    end[key - 1, default: 0] += value
                 }
             }
-
-            memo = temp
+            start = end
         }
-
-        return memo.values.reduce(0, +)
+        .values
+        .reduce(0, +)
     }
 }
