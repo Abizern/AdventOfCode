@@ -19,6 +19,10 @@ final class String_InputTests: XCTestCase {
         XCTAssertEqual(numbersOnLines.ints, [123, 456, 789])
     }
 
+    func testIntsFromLine() {
+        XCTAssertEqual(lineOfNumbers.intsFromLine, [3, 4, 1, 3, 2])
+    }
+
     func testIntSet() {
         XCTAssertEqual(numbersOnLines.intSet, Set([123, 456, 789]))
     }
@@ -42,3 +46,5 @@ private let numbersOnNewlines =
 789
 321
 """
+
+private let lineOfNumbers = "3,4,1,3,2"

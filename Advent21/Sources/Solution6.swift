@@ -20,9 +20,7 @@ public enum Solution6: Solution {
 extension Solution6 {
     static func generateDictionary(_ input: String) -> [Int: Int] {
         Dictionary(input
-                    .safeString
-                    .components(separatedBy: ",")
-                    .compactMap(Int.init)
+                    .intsFromLine
                     .map { ($0, 1) },
                    uniquingKeysWith: +)
     }

@@ -21,6 +21,11 @@ public extension String {
         lines.compactMap(Int.init)
     }
 
+    /// An array from a single line of comma separated numbers.
+    var intsFromLine: [Int] {
+        safeString.components(separatedBy: ",").compactMap(Int.init)
+    }
+
     /// A Set created from a list of numbers, one per line
     var intSet: Set<Int> {
         Set(ints)
