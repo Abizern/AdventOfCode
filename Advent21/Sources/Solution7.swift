@@ -7,13 +7,11 @@ public enum Solution7: Solution {
     public static var title = "--- Day 7: The Treachery of Whales ---"
 
     public static func part1(_ input: String) -> String {
-        let cheapest = cheapestChange(in: input.intsFromLine, costFunction: simpleCost)
-        return "\(cheapest)"
+        String(describing: cheapestChange(in: input.intsFromLine, costFunction: simpleCost))
     }
 
     public static func part2(_ input: String) -> String {
-        let cheapest = cheapestChange(in: input.intsFromLine, costFunction: complexCost)
-        return "\(cheapest)"
+        String(describing: cheapestChange(in: input.intsFromLine, costFunction: complexCost))
     }
 }
 
@@ -27,13 +25,16 @@ extension Solution7 {
     }
 
     static func cheapestChange(in input: [Int], costFunction: (Int) -> Int) -> Int {
+        func accumulator(current accum: inout Int, change: Int) {
+            accum += costFunction(change)
+        }
         let maxInput = input.max() ?? 0
         var cheapest = Int.max
         (0 ..< maxInput).forEach { target in
-            var cost = 0
-            for input in input {
-                cost += costFunction(abs(input - target))
-            }
+            let cost = input
+                .map { abs($0 - target) }
+                .reduce(into: 0, accumulator)
+
             if cost < cheapest {
                 cheapest = cost
             }
