@@ -1,5 +1,6 @@
 import Foundation
 
+/// Returns the raw input for the day.
 public func input(year: CLI.Year, problem: CLI.Problem) throws -> String {
     let base = "Resources"
     let year = year.rawValue
@@ -12,5 +13,5 @@ public func input(year: CLI.Year, problem: CLI.Problem) throws -> String {
         throw InputsError.fileNotFound(path)
     }
 
-    return try String(contentsOf: url).trimmingCharacters(in: .whitespacesAndNewlines)
+    return try String(contentsOf: url)
 }

@@ -25,4 +25,5 @@ private let testInput =
 11001
 00010
 01010
-""".trimmingCharacters(in: .whitespacesAndNewlines)
+
+"""

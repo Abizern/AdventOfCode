@@ -23,4 +23,5 @@ private let testInput =
 3,4 -> 1,4
 0,0 -> 8,8
 5,5 -> 8,2
-""".trimmingCharacters(in: .whitespacesAndNewlines)
+
+"""

@@ -12,11 +12,11 @@ final class CLITests: XCTestCase {
     }
 
     func testProblemInitialiserValidDay() {
-        let cliProblems = (1..<26).compactMap(String.init).compactMap(CLI.Problem.init(rawValue:))
+        let cliProblems = (1..<26).compactMap(CLI.Problem.init(rawValue:))
         XCTAssertEqual(cliProblems, CLI.Problem.allCases)
     }
 
     func testProblemInitialiserInvalid() {
-        XCTAssertNil(CLI.Problem.init(rawValue:"0"))
+        XCTAssertNil(CLI.Problem.init(rawValue:0))
     }
 }

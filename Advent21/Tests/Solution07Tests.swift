@@ -14,4 +14,5 @@ final class Solution7Tests: XCTestCase {
 private let testInput =
 """
 16,1,2,0,4,2,7,1,2,14
-""".trimmingCharacters(in: .whitespacesAndNewlines)
+
+"""
