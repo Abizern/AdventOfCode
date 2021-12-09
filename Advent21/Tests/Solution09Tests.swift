@@ -7,7 +7,7 @@ final class Solution9Tests: XCTestCase {
     }
 
     func testPart2() {
-        XCTAssertEqual(Solution9.part2(testInput), "")
+        XCTAssertEqual(Solution9.part2(testInput), "1134")
     }
 }
 
