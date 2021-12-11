@@ -11,6 +11,8 @@ public enum Solution12: Solution {
     public static func part2(_ input: String) -> String {
         "Not Solved Yet"
     }
+}
 
-
+extension Solution12 {
+    
 }
