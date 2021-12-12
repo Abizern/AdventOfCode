@@ -12,7 +12,7 @@ public enum Solution12: Solution {
 
     public static func part2(_ input: String) -> String {
         let graph = parseInput(input)
-        return String(describing: countPathsWithSingleLoop(graph))
+        return String(describing: countPaths(graph, allowLoop: true))
     }
 }
 
@@ -51,53 +51,32 @@ extension Solution12 {
         return (Cave(parts[0]), Cave(parts[1]))
     }
 
-    static func countPaths(_ graph: [Cave: [Cave]]) -> Int {
-        let node = (Cave.start, Set<Cave>([.start]))
-        var count = 0
-        var queue = Deque.init([node])
-        while !queue.isEmpty {
-//            print("Top of while:\n\(queue)")
-            guard let (current, visited) = queue.popFirst() else { fatalError("Already checked it isn't empty") }
-            if current == .end {
-                count += 1
-                continue
-            }
-            for adjacent in graph[current] ?? [] {
-                if !visited.contains(adjacent) {
-                    var v = visited
-                    if case Cave.small(_) = adjacent {
-                        v.insert(adjacent)
-                    }
-                    queue.append((adjacent, v))
-//                    print("Appended:\n\(queue)")
-                }
-            }
-        }
-
-        return count
-    }
-
-    static func countPathsWithSingleLoop(_ graph: [Cave: [Cave]]) -> Int {
+    static func countPaths(_ graph: [Cave: [Cave]], allowLoop: Bool = false) -> Int {
         let node = (Cave.start, Set<Cave>([.start]), false)
         var count = 0
         var queue = Deque.init([node])
         while !queue.isEmpty {
-            //            print("Top of while:\n\(queue)")
-            guard let (current, visited, hasLooped) = queue.popFirst() else { fatalError("Already checked it isn't empty") }
+            guard
+                let (current, smallVisited, hasLooped) = queue.popFirst()
+            else {
+                fatalError("Already checked it isn't empty")
+            }
             if current == .end {
                 count += 1
                 continue
             }
             for adjacent in graph[current] ?? [] {
-                if !visited.contains(adjacent) {
-                    var v = visited
+                if !smallVisited.contains(adjacent) {
+                    var smallVisited = smallVisited
                     if case Cave.small(_) = adjacent {
-                        v.insert(adjacent)
+                        smallVisited.insert(adjacent)
                     }
-                    queue.append((adjacent, v, hasLooped))
-                    //                    print("Appended:\n\(queue)")
-                } else if visited.contains(adjacent) && ![Cave.start, .end].contains(adjacent) && !hasLooped {
-                    queue.append((adjacent, visited, true))
+                    queue.append((adjacent, smallVisited, hasLooped))
+                } else if allowLoop &&
+                            !hasLooped &&
+                            smallVisited.contains(adjacent) &&
+                            ![Cave.start, .end].contains(adjacent) {
+                    queue.append((adjacent, smallVisited, true))
                 }
             }
         }
