@@ -56,48 +56,6 @@ extension Solution15 {
             dict = d
         }
 
-        private func adjacentPoints(_ pt: Point) -> [Point] {
-            let rowRange = (0 ..< height)
-            let colRange = (0 ..< width)
-            var points: [Point] = .init()
-            let rowChange = [-1, 0, 1, 0]
-            let colChange = [0, 1, 0, -1]
-            (0 ..< 4).forEach { changeIdx in
-                let r = pt.r + rowChange[changeIdx]
-                let c = pt.c + colChange[changeIdx]
-
-                if rowRange.contains(r) && colRange.contains(c) {
-                    points.append(Point(r: r, c: c))
-                }
-            }
-
-            return points
-        }
-
-        var lowestCost: Int {
-            let initialCostElement = CostElement(point: Point(r: 0, c: 0), cost: 0)
-            var queue = Heap(elements: [initialCostElement], priorityFunction: <)
-            var visited = Set<Point>()
-            var cost = 0
-            while !queue.isEmpty {
-                let element = queue.pop()!
-                let currentPoint = element.point
-                let currentCost = (dict[element.point] ?? 0) + element.cost
-                visited.insert(currentPoint)
-                if currentPoint == Point(r: height - 1, c: width - 1) {
-                    cost = currentCost
-                    break
-                }
-
-                adjacentPoints(element.point)
-                    .filter { !visited.contains($0) }
-                    .map { CostElement(point: $0, cost: currentCost) }
-                    .forEach { queue.push($0) }
-            }
-
-            return cost - dict[Point(r: 0, c: 0)]!
-        }
-
         func lowestCost(tiles: Int) -> Int {
             func costFor(_ point: Point) -> Int {
                 let r = point.r % height
