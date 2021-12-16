@@ -37,12 +37,10 @@ extension Solution16 {
 
 
         private func evaluate(_ string: String,
-                           cursor start: String.Index,
-                           version_accumulator: inout Int) -> (Int, String.Index) {
+                              cursor start: String.Index,
+                              version_accumulator: inout Int) -> (Int, String.Index) {
             version_accumulator += Int(string[start ..< string.index(start, offsetBy: 3)], radix: 2)! // Only 1 and 0 in string
-            print("version \(version_accumulator)")
             let typeId = string[string.index(start, offsetBy: 3) ..< string.index(start, offsetBy: 6)]
-            print("TypeId \(typeId)")
             var cursor = string.index(start, offsetBy: 6)
             if typeId == "100" {
                 var lastPacket = false
@@ -63,9 +61,8 @@ extension Solution16 {
                 if lengthType == "1" {
                     let cursorOffset = string.index(cursor, offsetBy: 11)
                     let packetCount = Int(string[cursor ..< cursorOffset], radix: 2)!
-                    print("PacketCount \(packetCount)")
                     cursor = cursorOffset
-                    (0 ..< packetCount).forEach { n in
+                    (0 ..< packetCount).forEach { _ in
                         let (value, nextIndex) = evaluate(string, cursor: cursor, version_accumulator: &version_accumulator)
                         values.append(value)
                         cursor = nextIndex
@@ -74,7 +71,6 @@ extension Solution16 {
                 } else {
                     let cursorOffset = string.index(cursor, offsetBy: 15)
                     let bitLength = Int(string[cursor ..< cursorOffset], radix: 2)!
-                    print("bitLength \(bitLength)")
                     cursor = cursorOffset
                     let endCursor = string.index(cursor, offsetBy: bitLength)
                     while cursor < endCursor {
@@ -82,7 +78,6 @@ extension Solution16 {
                         cursor = nextIndex
                         values.append(value)
                     }
-                    cursor = endCursor
                 }
 
                 switch typeId {
