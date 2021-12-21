@@ -1,4 +1,5 @@
 import AdventUtilities
+import Algorithms
 import Collections
 import Foundation
 import Parsing
@@ -14,7 +15,9 @@ public enum Solution21: Solution {
     }
 
     public static func part2(_ input: String) -> String {
-        return "Not Solved Yet"
+        let players = parse(input).map(DiracPlayer.init)
+        let result = runDiracGame(players: players)
+        return "\(result)"
     }
 }
 
@@ -36,7 +39,7 @@ extension Solution21 {
         }
     }
 
-    private struct GamePosition: Equatable {
+    private struct GamePosition: Hashable {
         private var internalValue: Int
 
         init(position: Int) {
@@ -57,7 +60,7 @@ extension Solution21 {
 
     private struct Player: Equatable {
         private let name: String
-        private var gamePosition: GamePosition
+        private(set) var gamePosition: GamePosition
         var score: Int = 0
 
         init(name: String, position: Int) {
@@ -95,6 +98,101 @@ extension Solution21 {
         let rollCount = die.index
 
         return losingScore * rollCount
+    }
+}
+
+extension Solution21 {
+    private struct DiracPlayer: Hashable {
+        private(set) var gamePosition: GamePosition
+        private(set) var score: Int = 0
+
+        init(_ player: Player) {
+            self.gamePosition = player.gamePosition
+        }
+
+        var hasWon: Bool {
+            score >= 21
+        }
+
+        mutating func advanceBy(_ n: Int) {
+            gamePosition.advanceBy(n)
+            score += gamePosition.value
+        }
+    }
+
+    private struct GameState: Hashable {
+        var p1: DiracPlayer
+        var p2: DiracPlayer
+
+        init(_ players: [DiracPlayer]) {
+            p1 = players[0]
+            p2 = players[1]
+        }
+
+        mutating func swap() {
+            let t = p1
+            p1 = p2
+            p2 = t
+        }
+
+        var result: (Int, Int) {
+            switch (p1.hasWon, p2.hasWon) {
+            case (true, false):
+                return (1, 0)
+            case (false, true):
+                return (0, 1)
+            default:
+                return (0, 0)
+            }
+        }
+    }
+
+    private static func runDiracGame(players: [DiracPlayer]) -> Int {
+        var memo: [GameState: (Int, Int)] = .init()
+        let diceRolls = diracDiceRolls()
+        let gameState = GameState(players)
+
+
+        func countWins(_ gameState: GameState) -> (Int, Int) {
+            let stateResult = gameState.result
+            guard stateResult == (0, 0) else {
+                return stateResult
+            }
+
+            if let memoResult = memo[gameState] {
+                return memoResult
+            }
+
+            // recursively work out the result
+            var accumulator = (0, 0)
+            for diceRoll in diceRolls {
+                var worldState = gameState
+                worldState.p1.advanceBy(diceRoll)
+                worldState.swap()
+                let (r0, r1) = countWins(worldState)
+                accumulator = (accumulator.0 + r1, accumulator.1 + r0)
+            }
+
+            memo[gameState] = accumulator
+            return accumulator
+        }
+
+        let result = countWins(gameState)
+        return max(result.0, result.1)
+    }
+
+    private static func diracDiceRolls() -> [Int] {
+        let range = (1 ... 3)
+        var results: [Int] = .init()
+        range.forEach { first in
+            range.forEach { second in
+                range.forEach { third in
+                    results.append(first + second + third)
+                }
+            }
+        }
+
+        return results
     }
 }
 
