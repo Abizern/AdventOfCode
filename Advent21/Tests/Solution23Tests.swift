@@ -14,4 +14,5 @@ final class Solutionn23Tests: XCTestCase {
 private let testInput =
 """
 
+
 """
