@@ -1,4 +1,5 @@
 import AdventUtilities
+import Collections
 import Foundation
 import Parsing
 
@@ -33,6 +34,19 @@ public enum Solution22: Solution {
 }
 
 private extension Solution22 {
+    enum State: Equatable {
+        case on
+        case off
+
+        init(_ str: Substring) {
+            if str == "on" {
+                self = .on
+            } else {
+                self = .off
+            }
+        }
+    }
+
     static func makeInstruction(_ values: (Substring, (Int, Int), (Int, Int), (Int, Int))) -> (inout (Int, Int, Int, Int)) -> Void {
         let instruction: String = String(values.0)
         let xRange = values.1
