@@ -13,6 +13,10 @@ final class Solutionn23Tests: XCTestCase {
 
 private let testInput =
 """
-
+#############
+#...........#
+###B#C#B#D###
+  #A#D#C#A#
+  #########
 
 """

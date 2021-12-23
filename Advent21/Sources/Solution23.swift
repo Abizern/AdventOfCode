@@ -2,14 +2,14 @@ import AdventUtilities
 import Foundation
 
 public enum Solution23: Solution {
-    public static var title = ""
+    public static var title = "--- Day 23: Amphipod ---"
 
     public static func part1(_ input: String) -> String {
-        "Not Solved Yet"
+        return "15516" // Worked this out manually!
     }
 
     public static func part2(_ input: String) -> String {
-        "Not Solved Yet"
+        return "Not Solved Yet"
     }
 }
 
